@@ -12,6 +12,21 @@ struct CheckoutView: View {
     @EnvironmentObject var order: Order
     static let paymentTypes = ["Cash", "Credit Card", "Points"]
     static let tipAmounts = [10, 15, 20, 25, 0]
+    static let currencyFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        return formatter
+    }()
+    
+    var totalPrice: Double {
+        let total = Double(order.total)
+        let tipValue = total * (Double(Self.tipAmounts[tipAmount]) / 100)
+        return total + tipValue
+    }
+    
+    private var formattedFinalTotal: String {
+        Self.currencyFormatter.string(from: NSNumber(value: totalPrice)) ?? "--"
+    }
     
     @State private var paymentType = 0
     @State private var tipAmount = 1
@@ -42,7 +57,7 @@ struct CheckoutView: View {
                 }
                 .pickerStyle(SegmentedPickerStyle())
             }
-            Section(header: Text("Total: $100")) {
+            Section(header: Text("Total: \(formattedFinalTotal)")) {
                 Button("Confirm Order") {
                     //Place the order
                 }

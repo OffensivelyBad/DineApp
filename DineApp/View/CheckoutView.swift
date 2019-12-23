@@ -9,9 +9,16 @@
 import SwiftUI
 
 struct CheckoutView: View {
+    @State private var paymentType = 0
+    @State private var tipAmount = 1
+    @State private var addLoyaltyDetails = false
+    @State private var loyaltyNumber = ""
+    @State private var showingPaymentAlert = false
     @EnvironmentObject var order: Order
+    
     static let paymentTypes = ["Cash", "Credit Card", "Points"]
     static let tipAmounts = [10, 15, 20, 25, 0]
+    
     static let currencyFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
@@ -27,11 +34,6 @@ struct CheckoutView: View {
     private var formattedFinalTotal: String {
         Self.currencyFormatter.string(from: NSNumber(value: totalPrice)) ?? "--"
     }
-    
-    @State private var paymentType = 0
-    @State private var tipAmount = 1
-    @State private var addLoyaltyDetails = false
-    @State private var loyaltyNumber = ""
     
     var body: some View {
         Form {
@@ -57,13 +59,16 @@ struct CheckoutView: View {
                 }
                 .pickerStyle(SegmentedPickerStyle())
             }
-            Section(header: Text("Total: \(formattedFinalTotal)")) {
+            Section(header: Text("Total: \(formattedFinalTotal)").font(.largeTitle)) {
                 Button("Confirm Order") {
-                    //Place the order
+                    self.showingPaymentAlert.toggle()
                 }
             }
         }
         .navigationBarTitle(Text("Payment"), displayMode: .inline)
+        .alert(isPresented: $showingPaymentAlert ) {
+            Alert(title: Text("Order confirmed"), message: Text("You total was \(formattedFinalTotal) - thank you!"), dismissButton: .default(Text("OK")))
+        }
     }
 }
 

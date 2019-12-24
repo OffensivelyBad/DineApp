@@ -10,6 +10,8 @@ import SwiftUI
 
 struct ItemDetail: View {
     var item: MenuItem
+    
+    @State private var isOrdered = false
     @EnvironmentObject var order: Order
     
     var body: some View {
@@ -25,9 +27,11 @@ struct ItemDetail: View {
             }
             Text(item.description)
                 .padding()
-            Button("Order this") {
+            Button(isOrdered ? "Ordered!" : "Order this") {
                 self.order.add(item: self.item)
+                self.isOrdered = true
             }
+            .disabled(isOrdered)
             Spacer()
         }
         .navigationBarTitle(Text(item.name), displayMode: .inline)

@@ -32,6 +32,12 @@ struct ItemDetail: View {
                 self.isOrdered = true
             }
             .disabled(isOrdered)
+            .padding(EdgeInsets(top: 10, leading: 30, bottom: 10, trailing: 30))
+            .foregroundColor(.white)
+            .font(Font.system(.headline, design: .default))
+            .background(Color.blue)
+            .cornerRadius(3)
+            .shadow(radius: 2)
             Spacer()
         }
         .navigationBarTitle(Text(item.name), displayMode: .inline)

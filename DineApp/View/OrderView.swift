@@ -20,11 +20,7 @@ struct OrderView: View {
             List {
                 Section {
                     ForEach(order.items) { item in
-                        HStack {
-                            Text(item.name)
-                            Spacer()
-                            Text("$\(item.price)")
-                        }
+                        ItemCell(item: item)
                     }
                     .onDelete(perform: deleteItems)
                 }

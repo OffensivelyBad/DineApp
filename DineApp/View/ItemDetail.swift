@@ -11,13 +11,34 @@ import SwiftUI
 struct ItemDetail: View {
     var item: MenuItem
     
-    @State private var isOrdered = false
     @EnvironmentObject var order: Order
+    @EnvironmentObject var favorite: Favorite
+    @State private var isOrdered = false
+    
+    private func getFavoriteImage() -> String {
+        return favorite.isFavorite(item: item) ? "star.fill" : "star"
+    }
     
     var body: some View {
         VStack {
             ZStack(alignment: .bottomTrailing) {
-                Image(item.mainImage)
+                ZStack(alignment: .topTrailing) {
+                    Image(item.mainImage)
+                    Button(action: {
+                        if self.favorite.isFavorite(item: self.item) {
+                            self.favorite.remove(item: self.item)
+                        } else {
+                            self.favorite.add(item: self.item)
+                        }
+                    }) {
+                        Image(systemName: getFavoriteImage())
+                            .padding(5)
+                            .foregroundColor(.yellow)
+                            .font(.headline)
+                            .foregroundColor(.red)
+                            .offset(x: -5, y: 5)
+                    }
+                }
                 Text("Photo: \(item.photoCredit)")
                     .padding(4)
                     .foregroundColor(.white)
